@@ -3,16 +3,19 @@
 Provides Mac OSX like 'Expose' view of all clients. 
 
 This is a fork from [revelation](https://github.com/bioe007/awesome-revelation)
-It is modified from the original revelation.lua for incorperating with awesome 3.5 or later. 
+It is modified from the original revelation.lua for incorporating with awesome 3.5 or later. 
 It also have some features.  
 
-**Stable branch is only working with stable verions of awesome, 3.5.6.**
+**Now master branch works for both master and stable awesome WM**
 
-**For awesome master version, please checkout master branch of revelation**
+## Changes since 2015-09-26
+When all clients are exposing, you can zoom (__Modkey + Shift + hintbox charater__ or __right button__ of the mouse)
+or kill a client (__middle button__ of the mouse) and the position of hintboxes will be updated accordingly.
 
 ## Changes since 2014-02-19
 * Now the revlation is able to handle the special clients(float, fullscreen or maximized etc.)
 * When you select an minimized client, the revelation will un-minimized it and then focuse on it.
+* Added an option to change character ordering
 
 ## Changes after 2013-12-30
 * Now it is possible, in revelation.init({...}), to change the default settings of 
@@ -24,8 +27,9 @@ curr_tag_only=...}`.
 1. To add specify rules `revelation({rule={...},...})`.
 2. To exclude the clients matched by the rules instead of including `revelation({rule={...}, 
 is_excluded=true})`.
-3. `{...,curr_tag_only=true}` make the revelation only collect the cliens from current
+3. `{...,curr_tag_only=true}` make the revelation only collect the client from current
   tags.
+
 
 ## Changes from the original revelation
 * Support awesome 3.5 or later 
@@ -37,7 +41,7 @@ is_excluded=true})`.
   navigating clients by pressing the keys "j, h, k, l"  and then selecting the
   client by pressing key "Enter" was deprecated. Now each client in the 'Expose'
   views come with a letter surrounding by a hint box, you can select the client
-  by pressing the corresponding letter in the hint box.  The iead and codes of this method
+  by pressing the corresponding letter in the hint box.  The idea and codes of this method
   was copied from the module [hint](https://github.com/zackpete/hints). 
   
 * Add zoom mode. Add the function of zooming the client by pressing the right
@@ -50,7 +54,7 @@ is_excluded=true})`.
 ![screenshot](./screenshot.png)
 
 
-## Use
+## Usage
 
 ### Installation
  (From user's awesome configuration directory, usually ~/.config/awesome)
@@ -62,7 +66,7 @@ is_excluded=true})`.
  2. Include it at the top of your rc.lua file:
     `local revelation=require("revelation")`
 
- 3. Add `revelation.init()` after `beautiful.init()`
+ 3. **Important: Add `revelation.init()` after `beautiful.init()`**
 
  3. Define a global keybinding (e. g. `ModKey + e`) for revelation in your rc.lua:
 
@@ -70,8 +74,7 @@ is_excluded=true})`.
         awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ), 
         awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
         awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
-    ==> awful.key({ modkey,           }, "e",      revelation),
-
+        awful.key({ modkey,           }, "e",      revelation),
         awful.key({ modkey,           }, "j",
         function ()
             awful.client.focus.byidx( 1)
@@ -91,7 +94,7 @@ is_excluded=true})`.
 ### Configuration
  Revelation's configuration is done through the init() function
  
- There are two basic settings, shown with default values:
+ There are three basic settings, shown with default values:
 
     -- The name of the tag created for the 'exposed' view
     revelation.tag_name = 'Revelation'
@@ -100,6 +103,9 @@ is_excluded=true})`.
     revelation.exact = awful.rules.match
     revelation.any   = awful.rules.match_any
 
+    -- Character order for selecting clients
+    revelation.charorder = "jkluiopyhnmfdsatgvcewqzx1234567890",
+
  The rule matching functions must conform to `awful.rules.match` prototypes.
 
  For client matching rules, we follow the same syntax as awful.rules expects.
@@ -107,7 +113,7 @@ is_excluded=true})`.
 
 to change the settings, use:
 
-     revelation.init({tag_name = ..., match={...})
+     revelation.init({tag_name = ..., match = {...}, charorder = ...})
 
 
 ### Examples
@@ -132,14 +138,14 @@ to change the settings, use:
  To exclude the clients,  we set:
 
      awful.key({modkey}, "e", function()
-             revelation(rule={class="conky"}, is_excluded=true)
+             revelation({rule={class="conky"}, is_excluded=true})
              end)
 
  To set only collect clients from current tag
 
      awful.key({modkey}, "e", function()
-                 revelation(rule={class="conky"}, is_excluded=true, 
-                curr_tag_only=true)
+                 revelation({rule={class="conky"}, is_excluded=true, 
+                curr_tag_only=true})
                  end)
 
 ## Credits
@@ -149,6 +155,8 @@ to change the settings, use:
     * Perry Hargrave <resixian@gmail.com>
 
 ### Contributions, many thanks!
+    * Daniel Hahler <github@thequod.de>
+    * Yauhen Kirylau
     * Nikola Petrov <nikolavp@gmail.com>
 
 ### Original authors
